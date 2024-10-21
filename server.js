@@ -1,22 +1,18 @@
 const fs = require('fs');
-const https = require('https');
+const http = require('http');
 const socketIo = require('socket.io');
 
 const options = {
-  key: fs.readFileSync('/etc/letsencrypt/live/qcom.info/privkey.pem'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/qcom.info/fullchain.pem'),
+	key: fs.readFileSync('/etc/letsencrypt/live/qcom.info/privkey.pem'),
+	cert: fs.readFileSync('/etc/letsencrypt/live/qcom.info/fullchain.pem'),
 };
 
-const server = https.createServer(options);
+const server = http.createServer(options);
 
 const io = socketIo(server, {
-  cors: {
-    origin: '*',
-  },
-});
-
-server.listen(3000, () => {
-  console.log('Secure signaling server is running on port 3000');
+	cors: {
+		origin: '*',
+	},
 });
 
 const users = {};
@@ -44,4 +40,8 @@ io.on('connection', (socket) => {
 		socket.to(room).emit('user-left', socket.id);
 		console.log('Client disconnected:', socket.id);
 	});
+});
+
+server.listen(3000, '127.0.0.1', () => {
+	console.log('Secure signaling server is running on port 3000');
 });
