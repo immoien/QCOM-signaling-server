@@ -1,7 +1,22 @@
-const io = require('socket.io')(3000, {
-	cors: {
-		origin: '*',
-	},
+const fs = require('fs');
+const https = require('https');
+const socketIo = require('socket.io');
+
+const options = {
+  key: fs.readFileSync('/etc/letsencrypt/live/qcom.info/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/qcom.info/fullchain.pem'),
+};
+
+const server = https.createServer(options);
+
+const io = socketIo(server, {
+  cors: {
+    origin: '*',
+  },
+});
+
+server.listen(3000, () => {
+  console.log('Secure signaling server is running on port 3000');
 });
 
 const users = {};
