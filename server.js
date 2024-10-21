@@ -1,13 +1,7 @@
-const fs = require('fs');
 const http = require('http');
 const socketIo = require('socket.io');
 
-const options = {
-	key: fs.readFileSync('/etc/letsencrypt/live/qcom.info/privkey.pem'),
-	cert: fs.readFileSync('/etc/letsencrypt/live/qcom.info/fullchain.pem'),
-};
-
-const server = http.createServer(options);
+const server = http.createServer();
 
 const io = socketIo(server, {
 	cors: {
